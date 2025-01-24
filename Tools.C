@@ -147,10 +147,13 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
   if (low < 0 || high > 63 || low > high || low > 63 || high < 0){
-    return 0;
+    return source;
   }
-  uint64_t getter = getBits(source, low, high); //with just this, it prints the bits that need to be switched. but not the entirety
-  return source & getter;
+  //uint64_t getter = getBits(source, low, high); //check what values are needed to flip
+        uint64_t flipper = 0xffffffffffffffff; 
+        flipper = flipper << (63-high) >> ((63-high) + low) << low; //this does what getter does except its flipping the bits as well
+        //flipper =  flipper | ~getter;
+        return source | flipper;
 }
 
 /**
