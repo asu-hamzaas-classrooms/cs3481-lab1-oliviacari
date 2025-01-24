@@ -43,6 +43,10 @@
 */
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
+
+  for (int i = 0; i < LONGSIZE; i++){
+    return 0;
+  }
   return 0;
 }
 
@@ -87,6 +91,7 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  *              getBits(0x8877665544332211, 4, 11) returns 0x21
  *              getBits(0x8877665544332211, 0, 63) returns 0x8877665544332211
  *              getBits(0x8877665544332211, 0, 64) returns 0
+ * 8877665544332211 11 -> 0-7 22 -> 8-15 and so on
  *
  * @param uint64_t source that holds the bits to be grabbed and 
  *        returned
@@ -104,7 +109,16 @@ uint64_t Tools::getByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  if (low < 0 || high > 63 || low > high || low > 63 || high < 0){
+    return 0;
+  }
+  /*shift the source left (Using getBits(0x8877665544332211, 4, 11) as an example)
+  If high = 11 The source should be shiftedd 63 - 11 = 52.
+  Since we're maintaing both left and right shifts, then we need to go right
+  */
+  int leftShiftCon = (63 - high);
+  int rightShiftCon = ((63 - high) + low);
+  return source << (leftShiftCon) >> (rightShiftCon);
 }
 
 
@@ -132,7 +146,11 @@ uint64_t Tools::getBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  if (low < 0 || high > 63 || low > high || low > 63 || high < 0){
+    return 0;
+  }
+  uint64_t getter = getBits(source, low, high); //with just this, it prints the bits that need to be switched. but not the entirety
+  return source & getter;
 }
 
 /**
