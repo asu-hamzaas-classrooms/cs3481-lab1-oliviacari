@@ -151,7 +151,7 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
   }
   //uint64_t getter = getBits(source, low, high); //check what values are needed to flip
         uint64_t flipper = 0xffffffffffffffff; 
-        flipper = flipper << (63-high) >> ((63-high) + low) << low; //this does what getter does except its flipping the bits as well
+        flipper = flipper << (63 - high) >> ((63 - high) + low) << low; //this does what getter does except its flipping the bits as well
         //flipper =  flipper | ~getter;
         return source | flipper;
 }
@@ -178,7 +178,13 @@ uint64_t Tools::setBits(uint64_t source, int32_t low, int32_t high)
  */
 uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 {
-  return 0;
+  if (low < 0 || high > 63 || low > high || low > 63 || high < 0){
+    return source;
+  }
+  uint64_t a = 0xffffffffffffffff;
+  uint64_t clearedBits = getBits(a, low, high);
+  clearedBits = clearedBits << low;
+  return ~clearedBits & source;
 }
 
 
@@ -209,7 +215,19 @@ uint64_t Tools::clearBits(uint64_t source, int32_t low, int32_t high)
 uint64_t Tools::copyBits(uint64_t source, uint64_t dest, 
                          int32_t srclow, int32_t dstlow, int32_t length)
 {
-   return 0; 
+   uint32_t srclowLen = srclow + (length - 1);
+   uint32_t dstlowLen = dstlow + (length - 1);
+
+  if (srclow < 0 || srclow > 63 || dstlow < 0 || dstlow > 63 || srclowLen > 63 || dstlowLen > 63){
+    return dest;
+  }
+   
+   uint64_t a = getBits(source, srclow, srclowLen);
+   uint64_t b = clearBits(dest, dstlow, dstlowLen);
+   return 0;
+  
+
+
 }
 
 
