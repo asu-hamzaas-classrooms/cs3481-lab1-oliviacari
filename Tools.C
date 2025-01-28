@@ -43,11 +43,11 @@
 */
 uint64_t Tools::buildLong(uint8_t bytes[LONGSIZE])
 {
-
+  uint64_t shifter = 0;
   for (int i = 0; i < LONGSIZE; i++){
-    return 0;
+    shifter |= (uint64_t)bytes[i] << (i * 8);
   }
-  return 0;
+  return shifter;
 }
 
 /** 
@@ -224,7 +224,7 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
    
    uint64_t a = getBits(source, srclow, srclowLen);
    uint64_t b = clearBits(dest, dstlow, dstlowLen);
-   return 0;
+   return a | b;
   
 
 
@@ -252,7 +252,8 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
  */
 uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
 {
-  return 0;
+  return source | ((0xffULL) << (8 * byteNum)) * (byteNum >= 0 && byteNum < 8);
+  //return source | (0xffull) << (8 * byteNum) * (byteNum >= 0 && byteNum < 8)
 }
 
 
@@ -274,7 +275,8 @@ uint64_t Tools::setByte(uint64_t source, int32_t byteNum)
  */
 uint64_t Tools::sign(uint64_t source)
 {
-  return 0;
+  uint64_t mostSigBit = source >> 63;
+  return mostSigBit & 1;
 }
 
 /**
