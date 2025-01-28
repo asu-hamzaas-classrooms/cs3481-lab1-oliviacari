@@ -224,6 +224,7 @@ uint64_t Tools::copyBits(uint64_t source, uint64_t dest,
    
    uint64_t a = getBits(source, srclow, srclowLen);
    uint64_t b = clearBits(dest, dstlow, dstlowLen);
+   a = a << dstlow;
    return a | b;
   
 
